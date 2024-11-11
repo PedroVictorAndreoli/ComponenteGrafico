@@ -23,18 +23,23 @@ namespace MeuComponenteGrafico
 
         public ProgressBarControl()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+
             animationTimer = new Timer();
-            animationTimer.Interval = 20; // Controla a velocidade da animação
+            animationTimer.Interval = 20;
             animationTimer.Tick += (s, e) =>
             {
                 if (isAnimating)
                 {
                     progressValue = (progressValue + 1) % 101;
-                    Invalidate(); // Redesenha o controle
+                    Invalidate();
                 }
             };
             animationTimer.Start();
         }
+
 
         public int ProgressValue
         {
@@ -128,14 +133,18 @@ namespace MeuComponenteGrafico
 
         private void DrawCircularProgress(Graphics g)
         {
-            float angle = (360f * progressValue) / 100f;
+            float angle = (360f * progressValue) / 100f; 
+            float startAngle = -90 + angle; 
+
             Rectangle bounds = new Rectangle(thickness, thickness, Width - 2 * thickness, Height - 2 * thickness);
+
             using (Pen backgroundPen = new Pen(backgroundColor, thickness))
             using (Pen progressPen = new Pen(progressColor, thickness))
             {
                 g.DrawArc(backgroundPen, bounds, 0, 360);
-                g.DrawArc(progressPen, bounds, -90, angle);
+                g.DrawArc(progressPen, bounds, startAngle, angle);
             }
         }
+
     }
 }
